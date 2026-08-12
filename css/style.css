@@ -352,6 +352,11 @@ footer p.muted{color:#9A8780;font-size:.84rem;line-height:1.65;margin-top:12px;}
 .breadcrumb{font-size:.83rem;color:var(--color-text-soft);margin-bottom:10px;}
 .breadcrumb a{color:var(--color-secondary-dark);font-weight:700;}
 .breadcrumb a:hover{color:var(--color-primary);}
+.beta-banner{
+  margin-top:16px;padding:10px 16px;border-radius:var(--radius-md);
+  background:rgba(45,149,150,.1);border:1px solid rgba(45,149,150,.25);
+  color:var(--color-secondary-dark);font-size:.86rem;font-weight:600;
+}
 
 /* ---------- Forms ---------- */
 .form-wrap{
@@ -375,6 +380,7 @@ input:focus,select:focus,textarea:focus{
   box-shadow:0 0 0 3.5px rgba(45,149,150,.14);
 }
 textarea{resize:vertical;min-height:90px;}
+input[readonly]{background:var(--color-bg);color:var(--color-text-soft);cursor:not-allowed;}
 .radio-group,.check-group{display:flex;gap:18px;flex-wrap:wrap;}
 .radio-group label,.check-group label{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.9rem;}
 .radio-group input,.check-group input{width:auto;}

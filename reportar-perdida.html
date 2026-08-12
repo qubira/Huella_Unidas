@@ -18,11 +18,12 @@
     <div class="breadcrumb"><a href="index.html">Inicio</a> / Reportar mascota perdida</div>
     <h1>🚨 Reportar mascota perdida</h1>
     <p class="muted">Completa la información con el mayor detalle posible. Mientras más datos incluyas, mejores serán las coincidencias automáticas.</p>
+    <div class="beta-banner">📍 Esta plataforma se encuentra en fase de prueba abierta al público y por ahora solo acepta reportes del departamento y provincia de <strong>Lima</strong>.</div>
   </div>
 </div>
 
 <section class="section">
-  <div class="container" style="max-width:920px;">
+  <div class="container" style="max-width:920px;" id="reportContainer">
     <form class="form-wrap" id="lostForm" novalidate>
 
       <fieldset>
@@ -88,8 +89,8 @@
             <select id="district" required></select>
             <span class="error-text">Selecciona el distrito.</span>
           </div>
-          <div class="field"><label>Provincia</label><input type="text" id="province" value="Lima"></div>
-          <div class="field"><label>Departamento</label><input type="text" id="department" value="Lima"></div>
+          <div class="field"><label>Provincia</label><input type="text" id="province" value="Lima" readonly></div>
+          <div class="field"><label>Departamento</label><input type="text" id="department" value="Lima" readonly></div>
         </div>
         <div class="field full">
           <label>Último lugar visto (marca el punto exacto en el mapa) *</label>
@@ -126,6 +127,19 @@
 <script src="js/main.js"></script>
 <script src="js/forms.js"></script>
 <script>
+(async function(){
+  await API.ready;
+  if (!currentUser()){
+    document.getElementById('reportContainer').innerHTML = `
+      <div class="empty-state">
+        <div class="ico">🔒</div>
+        <p><strong>Inicia sesión para reportar una mascota perdida</strong></p>
+        <p class="muted" style="font-size:.88rem;">Necesitas una cuenta para publicar un reporte y poder gestionarlo después.</p>
+        <button class="btn btn-primary" onclick="openAuthModal('login')" style="margin-top:12px;">Iniciar sesión</button>
+      </div>`;
+    return;
+  }
+
   const photoCtl = setupPhotoUpload('photoSlots', 4);
   fillDistritoSelect(document.getElementById('district'));
   generateCaptcha(document.getElementById('formCaptcha'));
@@ -210,6 +224,7 @@
     }
     setTimeout(()=>{ location.href = `detalle.html?id=${pet.id}`; }, 1200);
   });
+})();
 </script>
 </body>
 </html>

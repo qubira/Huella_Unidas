@@ -36,6 +36,11 @@ module.exports = withHandler(async (req, res) => {
     if (!b.kind || !b.status || !b.species){
       return res.status(400).json({ error: 'Faltan campos obligatorios (kind, status, species).' });
     }
+    // Fase de prueba: solo se aceptan reportes de Lima (provincia y departamento).
+    const isLima = (v) => !v || String(v).trim().toLowerCase() === 'lima';
+    if (!isLima(b.province) || !isLima(b.department)){
+      return res.status(400).json({ error: 'Por ahora esta plataforma solo acepta reportes de Lima (provincia y departamento).' });
+    }
     const rows = await db`
       INSERT INTO pets (
         kind, status, name, species, breed, sex, age, size, color, features,

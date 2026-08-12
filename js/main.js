@@ -154,7 +154,6 @@ function buildAuthModal(){
       <form id="loginForm">
         <div class="field"><label>Correo electrónico</label><input type="email" required id="loginEmail"></div>
         <div class="field"><label>Contraseña</label><input type="password" required id="loginPassword"></div>
-        <p class="muted" style="font-size:.78rem;">Demo: maria@demo.pe / demo123</p>
         <button class="btn btn-primary btn-block" type="submit">Entrar</button>
       </form>
       <form id="registerForm" style="display:none;">
@@ -329,8 +328,8 @@ function injectChrome(){
             </div>
             <div>
               <h4>Contacto</h4>
-              <a href="#">soporte@huellasunidas.pe</a>
-              <a href="#">+51 999 000 111</a>
+              <a href="mailto:qubira@gmail.com">qubira@gmail.com</a>
+              <a href="tel:+51924687363">+51 924 687 363</a>
               <a href="#">Lima, Perú</a>
             </div>
           </div>
