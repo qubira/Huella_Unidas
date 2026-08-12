@@ -16,6 +16,10 @@ module.exports = withHandler(async (req, res) => {
   }
 
   if (req.method === 'POST'){
+    if (req.body && req.body.markRead){
+      await db`UPDATE notifications SET read = true WHERE user_id = ${session.id} AND read = false`;
+      return res.status(200).json({ ok: true });
+    }
     // Autonotificación del propio usuario (ej. "encontramos posibles coincidencias").
     // No permite crear notificaciones para otros usuarios.
     const { type, title, body, petId } = req.body || {};

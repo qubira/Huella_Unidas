@@ -96,7 +96,7 @@ const API = (() => {
     return json.messages || [];
   }
   async function sendMessage({ petId, toId, text, shared }){
-    const json = await request('POST', '/api/messages', { petId, toId, text, shared });
+    const json = await request('POST', '/api/messages/send', { petId, toId, text, shared });
     return json;
   }
 
@@ -106,7 +106,7 @@ const API = (() => {
     return json.notifs || [];
   }
   async function markNotifsRead(){
-    return request('POST', '/api/notifs/mark-read');
+    return request('POST', '/api/notifs', { markRead: true });
   }
   async function addNotif({ type, title, body, petId }){
     const json = await request('POST', '/api/notifs', { type, title, body, petId });
