@@ -751,4 +751,16 @@ legend{font-family:var(--font-display);padding:0 8px;color:var(--color-primary-d
   .cta-band{padding:40px 28px;border-radius:var(--radius-lg);}
   .carousel-track .pet-card{min-width:100%;flex:0 0 100%;}
   .no-sell-inner{flex-direction:column;}
+  .nav-actions{gap:6px;}
+  .nav-actions .btn-sm{padding:7px 12px;font-size:.78rem;}
+  .filters-bar{flex-wrap:wrap;}
+  .filters-bar .field{flex:1 1 100%;}
+}
+@media (max-width:480px){
+  .container{padding:0 16px;}
+  .brand .brand-word{display:none;}
+  .brand-logo{height:34px;}
+  .user-chip .chip-name{display:none;}
+  .hero h1{font-size:1.8rem;}
+  .hero-badge{font-size:.78rem;}
 }

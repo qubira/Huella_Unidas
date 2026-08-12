@@ -46,7 +46,7 @@ function renderNavAuth(){
     const initials = user.name.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase();
     slot.innerHTML = `
       <button class="notif-btn" id="notifBtn" title="Notificaciones">🔔<span class="notif-badge" id="notifCount" style="display:none">0</span></button>
-      <div class="user-chip" id="userChip"><div class="avatar">${initials}</div><span>${user.name.split(' ')[0]}</span> ▾</div>
+      <div class="user-chip" id="userChip"><div class="avatar">${initials}</div><span class="chip-name">${user.name.split(' ')[0]}</span> ▾</div>
     `;
     document.getElementById('userChip').addEventListener('click', toggleUserMenu);
     document.getElementById('notifBtn').addEventListener('click', toggleNotifPanel);
@@ -272,7 +272,7 @@ function injectChrome(){
     navHost.innerHTML = `
       <nav class="navbar">
         <div class="container">
-          <a href="index.html" class="brand"><img src="img/logo_huellas-unidas.png" alt="Huellas Unidas" class="brand-logo">Huellas <span class="hl">Unidas</span></a>
+          <a href="index.html" class="brand"><img src="img/logo_huellas-unidas.png" alt="Huellas Unidas" class="brand-logo"><span class="brand-word">Huellas <span class="hl">Unidas</span></span></a>
           <button class="nav-toggle" id="navToggle">☰</button>
           <div class="nav-links" id="navLinks">
             <a href="index.html" data-nav="index">Inicio</a>
