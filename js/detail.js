@@ -83,7 +83,10 @@ async function renderDetail(pet){
 
     <div class="detail-layout">
       <div>
-        <div class="gallery-main" id="galleryMain">${photos[0] ? `<img src="${photos[0]}">` : emoji}</div>
+        <div class="gallery-main-wrap">
+          <div class="gallery-main" id="galleryMain">${photos[0] ? `<img src="${photos[0]}">` : emoji}</div>
+          ${photos.length ? `<button type="button" class="gallery-zoom-btn" id="galleryZoomBtn" title="Ver imagen completa">👁️</button>` : ''}
+        </div>
         ${photos.length>1 ? `<div class="gallery-thumbs">${photos.map((p,i)=>`<img src="${p}" class="${i===0?'active':''}" data-src="${p}">`).join('')}</div>` : ''}
 
         <div class="divider"></div>
@@ -127,6 +130,19 @@ async function renderDetail(pet){
       document.getElementById('galleryMain').innerHTML = `<img src="${img.dataset.src}">`;
     });
   });
+
+  // Imagen completa (lightbox)
+  const galleryWrap = host.querySelector('.gallery-main-wrap');
+  if (galleryWrap){
+    const openCurrentPhoto = () => {
+      const src = document.getElementById('galleryMain').querySelector('img')?.src;
+      if (src) openLightbox(src);
+    };
+    document.getElementById('galleryMain').addEventListener('click', (e)=>{
+      if (e.target.tagName === 'IMG') openCurrentPhoto();
+    });
+    document.getElementById('galleryZoomBtn')?.addEventListener('click', openCurrentPhoto);
+  }
 
   // Favorito
   document.getElementById('favDetailBtn').addEventListener('click', async (e)=>{
@@ -425,6 +441,28 @@ async function renderDetail(pet){
       document.getElementById('chatInput').focus();
     });
   }
+}
+
+// ---------------- Imagen completa (lightbox) ----------------
+function openLightbox(src){
+  let overlay = document.getElementById('imageLightbox');
+  if (!overlay){
+    overlay = document.createElement('div');
+    overlay.className = 'lightbox-overlay';
+    overlay.id = 'imageLightbox';
+    overlay.innerHTML = `
+      <button type="button" class="lightbox-close" id="lightboxClose">✕</button>
+      <img id="lightboxImg" src="" alt="Foto de la mascota">`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#lightboxClose').addEventListener('click', closeLightbox);
+    overlay.addEventListener('click', (e)=>{ if (e.target === overlay) closeLightbox(); });
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeLightbox(); });
+  }
+  overlay.querySelector('#lightboxImg').src = src;
+  overlay.classList.add('open');
+}
+function closeLightbox(){
+  document.getElementById('imageLightbox')?.classList.remove('open');
 }
 
 // ---------------- Compartir ----------------

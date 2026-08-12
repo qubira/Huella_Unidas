@@ -604,13 +604,33 @@ legend{font-family:var(--font-display);padding:0 8px;color:var(--color-primary-d
 
 /* ---------- Detail page / chat ---------- */
 .detail-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;}
+.gallery-main-wrap{position:relative;}
 .gallery-main{height:360px;border-radius:var(--radius-md);overflow:hidden;background:var(--color-bg);
   display:flex;align-items:center;justify-content:center;font-size:4rem;}
-.gallery-main img{width:100%;height:100%;object-fit:cover;}
+.gallery-main img{width:100%;height:100%;object-fit:cover;cursor:zoom-in;}
 .gallery-thumbs{display:flex;gap:10px;margin-top:10px;}
 .gallery-thumbs img{width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:border-color .15s,transform .15s;}
 .gallery-thumbs img:hover{transform:scale(1.05);}
 .gallery-thumbs img.active{border-color:var(--color-primary);}
+.gallery-zoom-btn{
+  position:absolute;bottom:12px;right:12px;width:38px;height:38px;border-radius:50%;border:none;
+  background:rgba(0,0,0,.55);color:#fff;font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .15s;
+}
+.gallery-zoom-btn:hover{background:rgba(0,0,0,.75);}
+
+.lightbox-overlay{
+  position:fixed;inset:0;background:rgba(20,14,16,.92);z-index:1000;padding:24px;
+  display:none;align-items:center;justify-content:center;
+}
+.lightbox-overlay.open{display:flex;}
+.lightbox-overlay img{max-width:92vw;max-height:88vh;border-radius:var(--radius-md);box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.lightbox-close{
+  position:absolute;top:20px;right:24px;width:42px;height:42px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;
+  font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.lightbox-close:hover{background:rgba(255,255,255,.22);}
 .info-table{width:100%;border-collapse:collapse;margin-top:10px;}
 .info-table td{padding:9px 0;border-bottom:1px solid var(--color-border);font-size:.9rem;}
 .info-table td:first-child{color:var(--color-text-soft);width:42%;font-weight:700;}

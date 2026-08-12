@@ -3,7 +3,7 @@
    Cachea el "shell" estático para que el sitio cargue
    más rápido y funcione parcialmente sin conexión.
 =================================================== */
-const CACHE_NAME = 'huellas-unidas-v2';
+const CACHE_NAME = 'huellas-unidas-v3';
 const CORE_ASSETS = [
   'index.html', 'mascotas.html', 'mapa.html', 'adopcion.html', 'estadisticas.html',
   'detalle.html', 'reportar-perdida.html', 'reportar-encontrada.html', 'admin.html', 'mensajes.html',
@@ -33,17 +33,17 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
   if (url.origin !== location.origin) return; // deja pasar CDNs externos (Leaflet, Chart.js, fuentes)
+  if (url.pathname.startsWith('/api/')) return; // los datos dinámicos nunca se sirven desde caché
 
+  // Network-first de verdad: intenta la red primero y solo cae al caché
+  // (páginas/CSS/JS ya visitados) si no hay conexión.
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request).then((response) => {
-        if (response && response.ok){
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-        }
-        return response;
-      }).catch(() => cached);
-      return cached || network;
-    })
+    fetch(event.request).then((response) => {
+      if (response && response.ok){
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+      }
+      return response;
+    }).catch(() => caches.match(event.request))
   );
 });
