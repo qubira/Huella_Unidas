@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Huellas Unidas — Reencuentra a tu mascota</title>
+<meta name="description" content="Plataforma comunitaria para reportar mascotas perdidas y encontradas, buscar en el mapa y promover la adopción responsable.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="img/logo_huellas-unidas.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="index">
+
+<div id="siteNavbar"></div>
+
+<header class="hero">
+  <div class="container">
+    <div>
+      <span class="hero-badge">🐾 +1,240 mascotas reunidas con sus familias</span>
+      <h1>Cada huella cuenta una <span class="accent">historia de reencuentro</span></h1>
+      <p class="lead">Huellas Unidas centraliza los reportes de mascotas perdidas y encontradas en un solo lugar: mapas en tiempo real, coincidencias inteligentes y una comunidad lista para ayudar.</p>
+      <div class="hero-cta">
+        <a href="reportar-perdida.html" class="btn btn-primary">Reportar mascota perdida</a>
+        <a href="reportar-encontrada.html" class="btn btn-outline">Reporté una encontrada</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong id="statLost">--</strong><span>Reportes activos</span></div>
+        <div><strong id="statReunited">--</strong><span>Reencuentros</span></div>
+        <div><strong id="statAdopt">--</strong><span>En adopción</span></div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="map-mini">
+        <div class="zone-ring r4"></div>
+        <div class="zone-ring r3"></div>
+        <div class="zone-ring r2"></div>
+        <div class="zone-ring r1"></div>
+        <div class="pin">📍</div>
+      </div>
+      <div class="hero-art-card">
+        <div class="ico">🐶</div>
+        <div><strong>Toby — Beagle mestizo</strong><span>Visto por última vez en Miraflores, hace 2 días</span></div>
+      </div>
+      <div class="hero-art-card">
+        <div class="ico">✨</div>
+        <div><strong>87% de coincidencia</strong><span>con un reporte de mascota encontrada cercano</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section carousel-section" style="padding-top:48px;padding-bottom:32px;">
+  <div class="container">
+    <div class="section-head" style="margin-bottom:32px;">
+      <span class="tag">🚨 Búsqueda urgente</span>
+      <h2>Mascotas perdidas que necesitan tu ayuda</h2>
+      <p>Comparte, difunde y ayuda a estas familias a reencontrarse con su mascota.</p>
+    </div>
+    <div class="carousel-outer">
+      <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Anterior">&#8592;</button>
+      <div class="carousel-viewport" id="carouselViewport">
+        <div class="carousel-track" id="carouselTrack"></div>
+      </div>
+      <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Siguiente">&#8594;</button>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+    <div class="text-center" style="margin-top:24px;">
+      <a href="mascotas.html?status=perdida" class="btn btn-outline">Ver todas las mascotas perdidas</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="tag">Cómo funciona</span>
+      <h2>Reencontrar a tu mascota en 4 pasos</h2>
+      <p>Un proceso simple, guiado por geolocalización y la fuerza de la comunidad.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Reporta</h3>
+        <p>Crea un reporte de mascota perdida o encontrada con fotos, ubicación exacta y características.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Geolocaliza</h3>
+        <p>El sistema genera zonas de búsqueda (roja, amarilla, naranja, verde) alrededor del último punto visto.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Conecta</h3>
+        <p>Recibe alertas de coincidencias automáticas y chatea de forma segura con quien encontró a tu mascota.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>Reencuentro</h3>
+        <p>Actualiza el estado a "Reunida" y ayuda a las estadísticas comunitarias a crecer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="tag">Módulos de la plataforma</span>
+      <h2>Todo lo que necesitas en un solo lugar</h2>
+      <p>Sustituye los grupos dispersos de WhatsApp, Facebook e Instagram por un sistema unificado.</p>
+    </div>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-top"></div>
+        <div class="module-card-inner">
+          <div class="ico">🚨</div>
+          <h3>Mascota perdida</h3>
+          <p>Registra toda la información relevante: foto, especie, características, microchip, recompensa y último lugar visto.</p>
+          <a href="reportar-perdida.html">Reportar ahora →</a>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-top"></div>
+        <div class="module-card-inner">
+          <div class="ico">🧡</div>
+          <h3>Mascota encontrada</h3>
+          <p>Ayuda a una mascota que encontraste registrando su ubicación, estado y fotos para contactar a su familia.</p>
+          <a href="reportar-encontrada.html">Reportar hallazgo →</a>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-top"></div>
+        <div class="module-card-inner">
+          <div class="ico">🗺️</div>
+          <h3>Mapa interactivo</h3>
+          <p>Visualiza zonas de búsqueda, filtra por especie, distrito y fecha, y activa el mapa de calor de reportes.</p>
+          <a href="mapa.html">Explorar mapa →</a>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-top"></div>
+        <div class="module-card-inner">
+          <div class="ico">✨</div>
+          <h3>Coincidencias inteligentes</h3>
+          <p>Algoritmo que compara raza, color, tamaño, distrito y distancia para sugerir el porcentaje de coincidencia.</p>
+          <a href="mascotas.html">Ver coincidencias →</a>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-top"></div>
+        <div class="module-card-inner">
+          <div class="ico">🏠</div>
+          <h3>Adopción responsable</h3>
+          <p>Publica y descubre mascotas en adopción con historia, estado de salud, vacunas y requisitos claros.</p>
+          <a href="adopcion.html">Ver mascotas en adopción →</a>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-top"></div>
+        <div class="module-card-inner">
+          <div class="ico">📊</div>
+          <h3>Estadísticas comunitarias</h3>
+          <p>Tasa de reencuentro, distritos con más reportes y tiempo promedio de búsqueda, en gráficos interactivos.</p>
+          <a href="estadisticas.html">Ver dashboard →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="tag">Geolocalización inteligente</span>
+      <h2>Zonas de búsqueda automáticas</h2>
+      <p>Las mascotas suelen desplazarse entre 500 metros y 5 km dependiendo de la especie, edad y tiempo desaparecida.</p>
+    </div>
+    <div class="zones-legend">
+      <div class="zone-chip"><span class="zone-dot roja"></span>Zona roja · 500 m</div>
+      <div class="zone-chip"><span class="zone-dot amarilla"></span>Zona amarilla · 1 km</div>
+      <div class="zone-chip"><span class="zone-dot naranja"></span>Zona naranja · 3 km</div>
+      <div class="zone-chip"><span class="zone-dot verde"></span>Zona verde · 5 km</div>
+    </div>
+    <div class="text-center" style="margin-top:28px;">
+      <a href="mapa.html" class="btn btn-secondary">Ver mapa interactivo</a>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container">
+    <div class="cta-band">
+      <h2>¿Encontraste una mascota sin dueño visible?</h2>
+      <p>Tu reporte puede ser la pieza que falta para reunir a una familia. Toma una foto y regístrala en menos de 2 minutos.</p>
+      <a href="reportar-encontrada.html" class="btn btn-secondary">Reportar mascota encontrada</a>
+    </div>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script>
+  (async function(){
+    const pets = await API.getPets();
+    document.getElementById('statLost').textContent = pets.filter(p=>p.status==='perdida'||p.status==='verificacion').length;
+    document.getElementById('statReunited').textContent = pets.filter(p=>p.status==='reunida').length;
+    document.getElementById('statAdopt').textContent = pets.filter(p=>p.kind==='adopcion').length;
+  })();
+</script>
+</body>
+</html>

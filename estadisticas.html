@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estadísticas — Huellas Unidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="img/logo_huellas-unidas.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="estadisticas">
+
+<div id="siteNavbar"></div>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Estadísticas</div>
+    <h1>📊 Dashboard de estadísticas</h1>
+    <p class="muted">Impacto comunitario en tiempo real: reencuentros, adopciones y zonas con más reportes.</p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:32px;">
+  <div class="container">
+
+    <div class="stat-cards">
+      <div class="stat-card"><div class="ico">🚨</div><strong id="cardLost">0</strong><span>Mascotas perdidas</span></div>
+      <div class="stat-card"><div class="ico">🧡</div><strong id="cardFound">0</strong><span>Mascotas encontradas</span></div>
+      <div class="stat-card"><div class="ico">✅</div><strong id="cardReunited">0</strong><span>Reencuentros</span></div>
+      <div class="stat-card"><div class="ico">🏠</div><strong id="cardAdopt">0</strong><span>En adopción</span></div>
+    </div>
+
+    <div class="stat-cards" style="grid-template-columns:repeat(2,1fr);">
+      <div class="stat-card"><div class="ico">📈</div><strong id="reunionRate">0%</strong><span>Tasa de reencuentro</span></div>
+      <div class="stat-card"><div class="ico">⏱️</div><strong id="avgSearchTime">—</strong><span>Tiempo promedio de búsqueda</span></div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Reportes por mes</h3>
+        <canvas id="chartTimeline" height="160"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Distribución por tipo</h3>
+        <canvas id="chartTypes" height="160"></canvas>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Especies más reportadas</h3>
+        <canvas id="chartSpecies" height="160"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Distritos con más reportes</h3>
+        <ul class="ranking-list" id="districtRanking"></ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/stats.js"></script>
+<script>initStatsPage();</script>
+</body>
+</html>

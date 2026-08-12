@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa interactivo — Huellas Unidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="icon" type="image/png" href="img/logo_huellas-unidas.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="mapa">
+
+<div id="siteNavbar"></div>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Mapa interactivo</div>
+    <h1>🗺️ Mapa interactivo de reportes</h1>
+    <p class="muted">Visualiza mascotas perdidas y encontradas, zonas de búsqueda y puntos de mayor concentración de reportes.</p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:32px;">
+  <div class="container">
+
+    <div class="filters-bar">
+      <div class="field">
+        <label>Especie</label>
+        <select id="fSpecies"><option value="">Todas</option><option>Perro</option><option>Gato</option><option>Ave</option><option>Conejo</option><option>Otro</option></select>
+      </div>
+      <div class="field">
+        <label>Estado</label>
+        <select id="fStatus">
+          <option value="">Todos</option>
+          <option value="perdida">Perdida</option>
+          <option value="verificacion">En verificación</option>
+          <option value="encontrada">Encontrada</option>
+          <option value="reunida">Reunida</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Distrito</label>
+        <select id="fDistrict"><option value="">Todos</option></select>
+      </div>
+      <div class="field">
+        <label>Desde fecha</label>
+        <input type="date" id="fDate">
+      </div>
+      <button class="btn btn-secondary btn-sm" id="applyFilters">Filtrar</button>
+      <button class="btn btn-ghost btn-sm" id="clearFilters">Limpiar</button>
+    </div>
+
+    <div class="map-layout">
+      <aside class="map-sidebar">
+        <div class="map-toolbar">
+          <button class="btn btn-outline btn-sm" id="heatToggle">🔥 Modo calor</button>
+        </div>
+        <p class="muted" style="font-size:.85rem;">Haz clic en un reporte para ver sus zonas de búsqueda en el mapa.</p>
+        <div id="petList"></div>
+        <div class="legend-box">
+          <strong style="font-size:.85rem;">Zonas de búsqueda</strong>
+          <div class="zone-chip"><span class="zone-dot roja"></span>Roja · 500 m</div>
+          <div class="zone-chip"><span class="zone-dot amarilla"></span>Amarilla · 1 km</div>
+          <div class="zone-chip"><span class="zone-dot naranja"></span>Naranja · 3 km</div>
+          <div class="zone-chip"><span class="zone-dot verde"></span>Verde · 5 km</div>
+          <p class="hint" style="margin-top:6px;">Las mascotas suelen desplazarse entre 500 m y 5 km según especie, edad y tiempo desaparecida.</p>
+        </div>
+      </aside>
+      <div id="bigmap"></div>
+    </div>
+
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/map.js"></script>
+<script>
+(async function(){
+  initBigMap();
+  fillDistritoSelect(document.getElementById('fDistrict'));
+
+  let allPets = (await API.getPets()).filter(p=>p.kind!=='adopcion');
+  let heatOn = false;
+
+  function applyFilters(){
+    const species = document.getElementById('fSpecies').value;
+    const status = document.getElementById('fStatus').value;
+    const district = document.getElementById('fDistrict').value;
+    const date = document.getElementById('fDate').value;
+    const filtered = allPets.filter(p=>
+      (!species || p.species===species) &&
+      (!status || p.status===status) &&
+      (!district || p.district===district) &&
+      (!date || p.date >= date)
+    );
+    renderMarkers(filtered);
+    toggleHeatmap(filtered, heatOn);
+    renderPetList(filtered);
+  }
+
+  function renderPetList(pets){
+    const host = document.getElementById('petList');
+    if (!pets.length){ host.innerHTML = `<p class="muted" style="font-size:.85rem;">No hay reportes con estos filtros.</p>`; return; }
+    host.innerHTML = pets.map(p=>`
+      <div class="mini-pet-item" data-id="${p.id}">
+        <div class="thumb">${p.photos&&p.photos[0] ? `<img src="${p.photos[0]}">` : (p.species==='Gato'?'🐱':p.species==='Perro'?'🐶':'🐾')}</div>
+        <div>
+          <strong>${p.name}</strong>
+          <span>${p.species} · ${p.district} · <span style="text-transform:capitalize">${p.status}</span></span>
+        </div>
+      </div>`).join('');
+    host.querySelectorAll('.mini-pet-item').forEach(item=>{
+      item.addEventListener('click', ()=>{
+        const pet = allPets.find(p=>p.id===item.dataset.id);
+        if (pet) drawZones(pet);
+      });
+    });
+  }
+
+  document.getElementById('applyFilters').addEventListener('click', applyFilters);
+  document.getElementById('clearFilters').addEventListener('click', ()=>{
+    document.getElementById('fSpecies').value='';
+    document.getElementById('fStatus').value='';
+    document.getElementById('fDistrict').value='';
+    document.getElementById('fDate').value='';
+    applyFilters();
+  });
+  document.getElementById('heatToggle').addEventListener('click', function(){
+    heatOn = !heatOn;
+    this.classList.toggle('btn-secondary', heatOn);
+    applyFilters();
+  });
+
+  applyFilters();
+})();
+</script>
+</body>
+</html>

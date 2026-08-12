@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis mensajes — Huellas Unidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="img/logo_huellas-unidas.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="mensajes">
+
+<div id="siteNavbar"></div>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Mis mensajes</div>
+    <h1>💬 Mis mensajes privados</h1>
+    <p class="muted">Conversaciones sobre mascotas perdidas, encontradas y adopciones.</p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:32px;">
+  <div class="container">
+    <div id="mensajesContent">
+      <p class="muted">Cargando...</p>
+    </div>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  await API.ready;
+  const user = currentUser();
+  const host = document.getElementById('mensajesContent');
+
+  if (!user) {
+    host.innerHTML = `
+      <div class="empty-state">
+        <div class="ico">🔒</div>
+        <p><strong>Inicia sesión para ver tus mensajes</strong></p>
+        <button class="btn btn-primary" onclick="openAuthModal('login')" style="margin-top:12px;">Iniciar sesión</button>
+      </div>`;
+    return;
+  }
+
+  const convs = await API.getConversations();
+
+  if (!convs.length) {
+    host.innerHTML = `
+      <div class="empty-state">
+        <div class="ico">💬</div>
+        <p>Aún no tienes mensajes. Cuando contactes o te contacten sobre una mascota, aparecerán aquí.</p>
+        <a href="mascotas.html" class="btn btn-primary" style="margin-top:14px;">Explorar mascotas</a>
+      </div>`;
+    return;
+  }
+
+  host.innerHTML = `
+    <div class="inbox-list">
+      ${convs.map(c => {
+        const pet = c.pet;
+        const last = c.lastMessage;
+        const isMe = last.fromId === user.id;
+        const time = new Date(last.createdAt).toLocaleDateString('es-PE',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+        const initials = c.otherUserName.split(' ').map(n=>n[0]).slice(0,2).join('').toUpperCase();
+        return `<a href="detalle.html?id=${pet.id}" class="inbox-item">
+          <div class="inbox-pet-thumb">${pet.photo ? `<img src="${pet.photo}">` : '🐾'}</div>
+          <div class="inbox-avatar">${initials}</div>
+          <div class="inbox-info">
+            <div class="inbox-names"><strong>${c.otherUserName.split(' ')[0]}</strong><span class="inbox-pet-name">sobre ${pet.name}</span></div>
+            <div class="inbox-preview">${isMe ? 'Tú: ' : ''}${last.text.substring(0,60)}${last.text.length>60?'…':''}</div>
+          </div>
+          <div class="inbox-meta">
+            <span class="inbox-time">${time}</span>
+            <span class="status-badge status-${pet.status}" style="position:static;display:inline-block;font-size:.65rem;padding:3px 8px;">${pet.name}</span>
+          </div>
+        </a>`;
+      }).join('')}
+    </div>`;
+});
+</script>
+</body>
+</html>

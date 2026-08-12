@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buscar mascotas — Huellas Unidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="img/logo_huellas-unidas.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="mascotas">
+
+<div id="siteNavbar"></div>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Mascotas</div>
+    <h1 id="pageTitleText">🔎 Buscar mascotas</h1>
+    <p class="muted" id="pageSubtitleText">Explora todos los reportes de mascotas perdidas y encontradas en la comunidad.</p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:32px;">
+  <div class="container">
+
+    <div class="filters-bar">
+      <div class="field" style="flex:2;">
+        <label>Buscar</label>
+        <input type="text" id="searchInput" placeholder="Nombre, raza, color, características...">
+      </div>
+      <div class="field">
+        <label>Especie</label>
+        <select id="fSpecies"><option value="">Todas</option><option>Perro</option><option>Gato</option><option>Ave</option><option>Conejo</option><option>Otro</option></select>
+      </div>
+      <div class="field">
+        <label>Estado</label>
+        <select id="fStatus">
+          <option value="">Todos</option>
+          <option value="perdida">Perdida</option>
+          <option value="verificacion">En verificación</option>
+          <option value="encontrada">Encontrada</option>
+          <option value="reunida">Reunida</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Distrito</label>
+        <select id="fDistrict"><option value="">Todos</option></select>
+      </div>
+      <div class="field" style="flex:0;">
+        <label>&nbsp;</label>
+        <label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:.86rem;white-space:nowrap;">
+          <input type="checkbox" id="fShowResolved" style="width:auto;"> Ver historial (reunidas)
+        </label>
+      </div>
+    </div>
+
+    <p class="muted" style="margin-bottom:18px;"><strong id="resultCount">0</strong> resultado(s) encontrado(s)</p>
+
+    <div class="pets-grid" id="petsGrid"></div>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/listing.js"></script>
+<script>initListingPage();</script>
+</body>
+</html>

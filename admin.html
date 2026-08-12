@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administrador — Huellas Unidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="img/logo_huellas-unidas.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="admin">
+
+<div id="siteNavbar"></div>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Panel admin</div>
+    <h1>⚙️ Panel de administrador</h1>
+    <p class="muted">Modera publicaciones, gestiona usuarios y supervisa la actividad de la plataforma.</p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:32px;">
+  <div class="container">
+
+    <div id="adminGuard" class="empty-state" style="display:none;">
+      <div class="ico">🔒</div>
+      <p>Esta sección es solo para administradores. Inicia sesión con una cuenta de administrador.</p>
+      <p class="muted" style="font-size:.82rem;">Demo: admin@huellasunidas.pe / admin123</p>
+    </div>
+
+    <div id="adminContent" style="display:none;">
+      <div class="stat-cards">
+        <div class="stat-card"><div class="ico">🐾</div><strong id="mPets">0</strong><span>Publicaciones totales</span></div>
+        <div class="stat-card"><div class="ico">👥</div><strong id="mUsers">0</strong><span>Usuarios registrados</span></div>
+        <div class="stat-card"><div class="ico">🚩</div><strong id="mFlagged">0</strong><span>Reportadas como falsas</span></div>
+        <div class="stat-card"><div class="ico">⛔</div><strong id="mBlocked">0</strong><span>Usuarios bloqueados</span></div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:22px;">
+        <h3>🚩 Publicaciones reportadas por la comunidad</h3>
+        <div id="flaggedList" style="margin-top:14px;"></div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:22px;">
+        <div class="flex-between">
+          <h3>Todas las publicaciones</h3>
+          <input type="text" id="petSearch" placeholder="Buscar por nombre o especie..." style="max-width:260px;">
+        </div>
+        <div id="allPetsList" style="margin-top:14px;overflow:auto;"></div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Usuarios</h3>
+        <div id="usersList" style="margin-top:14px;overflow:auto;"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/listing.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  initAdminPage();
+</script>
+</body>
+</html>

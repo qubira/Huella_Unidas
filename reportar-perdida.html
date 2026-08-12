@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reportar mascota perdida — Huellas Unidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="icon" type="image/png" href="img/logo_huellas-unidas.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="reportar-perdida">
+
+<div id="siteNavbar"></div>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Reportar mascota perdida</div>
+    <h1>🚨 Reportar mascota perdida</h1>
+    <p class="muted">Completa la información con el mayor detalle posible. Mientras más datos incluyas, mejores serán las coincidencias automáticas.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container" style="max-width:920px;">
+    <form class="form-wrap" id="lostForm" novalidate>
+
+      <fieldset>
+        <legend>Fotos de la mascota</legend>
+        <div class="photo-upload" id="photoSlots"></div>
+        <p class="hint" style="margin-top:8px;">Sube hasta 4 fotos. La primera será la foto principal.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Información básica</legend>
+        <div class="form-grid">
+          <div class="field"><label>Nombre de la mascota</label><input type="text" id="name" placeholder="Ej. Toby"></div>
+          <div class="field">
+            <label>Especie *</label>
+            <select id="species" required>
+              <option value="">Selecciona</option>
+              <option>Perro</option><option>Gato</option><option>Ave</option><option>Conejo</option><option>Otro</option>
+            </select>
+            <span class="error-text">Selecciona la especie.</span>
+          </div>
+          <div class="field"><label>Raza</label><input type="text" id="breed" placeholder="Ej. Mestizo, Beagle..."></div>
+          <div class="field">
+            <label>Sexo</label>
+            <div class="radio-group">
+              <label><input type="radio" name="sex" value="Macho" checked> Macho</label>
+              <label><input type="radio" name="sex" value="Hembra"> Hembra</label>
+            </div>
+          </div>
+          <div class="field"><label>Edad aproximada</label><input type="text" id="age" placeholder="Ej. 3 años"></div>
+          <div class="field">
+            <label>Tamaño</label>
+            <select id="size"><option value="">Selecciona</option><option>Pequeño</option><option>Mediano</option><option>Grande</option></select>
+          </div>
+          <div class="field"><label>Color</label><input type="text" id="color" placeholder="Ej. Marrón y blanco"></div>
+          <div class="field"><label>Estado de salud</label><input type="text" id="health" placeholder="Ej. Saludable, en tratamiento..."></div>
+          <div class="field full"><label>Características especiales</label><textarea id="features" placeholder="Cicatrices, manchas, comportamiento particular..."></textarea></div>
+          <div class="field">
+            <label>¿Tiene microchip?</label>
+            <div class="radio-group">
+              <label><input type="radio" name="microchip" value="si"> Sí</label>
+              <label><input type="radio" name="microchip" value="no" checked> No</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>¿Tiene collar?</label>
+            <div class="radio-group">
+              <label><input type="radio" name="collar" value="si"> Sí</label>
+              <label><input type="radio" name="collar" value="no" checked> No</label>
+            </div>
+          </div>
+          <div class="field full"><label>Recompensa (opcional)</label><input type="text" id="reward" placeholder="Ej. S/ 200"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Información de la pérdida</legend>
+        <div class="form-grid">
+          <div class="field"><label>Fecha *</label><input type="date" id="date" required></div>
+          <div class="field"><label>Hora aproximada</label><input type="time" id="time"></div>
+          <div class="field full"><label>Dirección</label><input type="text" id="address" placeholder="Calle, número, referencia"></div>
+          <div class="field">
+            <label>Distrito *</label>
+            <select id="district" required></select>
+            <span class="error-text">Selecciona el distrito.</span>
+          </div>
+          <div class="field"><label>Provincia</label><input type="text" id="province" value="Lima"></div>
+          <div class="field"><label>Departamento</label><input type="text" id="department" value="Lima"></div>
+        </div>
+        <div class="field full">
+          <label>Último lugar visto (marca el punto exacto en el mapa) *</label>
+          <div id="pickMap" class="map-pick"></div>
+          <div class="geoloc-row">
+            <button type="button" class="btn btn-ghost btn-sm" id="geoBtn">📍 Usar mi ubicación actual</button>
+            <span class="coord-display" id="coordDisplay">Sin ubicación seleccionada</span>
+          </div>
+        </div>
+        <div class="field full"><label>Descripción de lo sucedido</label><textarea id="description" placeholder="Cuéntanos cómo ocurrió la pérdida..."></textarea></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Verificación</legend>
+        <div class="field">
+          <label>Confirma que no eres un robot</label>
+          <div class="captcha-box" id="formCaptcha"><span>Resuelve:</span><span class="sum"></span>
+            <input type="number" placeholder="Resultado" id="captchaInput" style="max-width:110px;"></div>
+        </div>
+      </fieldset>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" onclick="history.back()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Publicar reporte</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<div id="siteFooter"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/forms.js"></script>
+<script>
+  const photoCtl = setupPhotoUpload('photoSlots', 4);
+  fillDistritoSelect(document.getElementById('district'));
+  generateCaptcha(document.getElementById('formCaptcha'));
+  document.getElementById('date').valueAsDate = new Date();
+
+  let pickedLat=null, pickedLng=null;
+  const mapCtl = setupMapPicker('pickMap', {
+    geoButtonId:'geoBtn',
+    onPick:(lat,lng)=>{
+      pickedLat=lat; pickedLng=lng;
+      document.getElementById('coordDisplay').textContent = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+    }
+  });
+
+  document.getElementById('lostForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    if (!requireAuth('publicar un reporte')) return;
+
+    let valid = true;
+    const requiredFields = [
+      ['species', document.getElementById('species').value],
+      ['date', document.getElementById('date').value],
+      ['district', document.getElementById('district').value],
+    ];
+    requiredFields.forEach(([id,val])=>{
+      const field = document.getElementById(id).closest('.field');
+      if (!val){ field.classList.add('invalid'); valid=false; } else field.classList.remove('invalid');
+    });
+    if (!pickedLat){
+      toast('Falta la ubicación', 'Marca en el mapa el último lugar visto.', 'error'); valid=false;
+    }
+    if (photoCtl.isUploading()){
+      toast('Espera un momento', 'Todavía se están subiendo las fotos.', 'info'); valid=false;
+    }
+    const captchaBox = document.getElementById('formCaptcha');
+    const captchaInput = document.getElementById('captchaInput');
+    if (!checkCaptcha(captchaBox, captchaInput)){
+      toast('Verificación incorrecta', 'Resuelve correctamente la operación matemática.', 'error');
+      generateCaptcha(captchaBox); captchaInput.value=''; valid=false;
+    }
+    if (!valid) return;
+
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+
+    const petInput = {
+      kind:'perdida', status:'perdida',
+      name: document.getElementById('name').value || '(Sin nombre)',
+      species: document.getElementById('species').value,
+      breed: document.getElementById('breed').value,
+      sex: document.querySelector('input[name=sex]:checked').value,
+      age: document.getElementById('age').value,
+      size: document.getElementById('size').value,
+      color: document.getElementById('color').value,
+      features: document.getElementById('features').value,
+      microchip: document.querySelector('input[name=microchip]:checked').value==='si',
+      collar: document.querySelector('input[name=collar]:checked').value==='si',
+      health: document.getElementById('health').value,
+      reward: document.getElementById('reward').value,
+      photos: photoCtl.getPhotos(),
+      date: document.getElementById('date').value,
+      time: document.getElementById('time').value,
+      address: document.getElementById('address').value,
+      district: document.getElementById('district').value,
+      province: document.getElementById('province').value,
+      department: document.getElementById('department').value,
+      lat: pickedLat, lng: pickedLng,
+      description: document.getElementById('description').value,
+    };
+    const res = await API.addPet(petInput);
+    submitBtn.disabled = false;
+    if (res.error){ toast('No se pudo publicar', res.error, 'error'); return; }
+    const pet = res.pet;
+    await pushNotif({ type:'system', title:'Reporte publicado', body:`Tu reporte de ${pet.name} ya está visible para la comunidad.`, petId: pet.id });
+
+    // Buscar coincidencias automáticas con mascotas "encontradas"
+    const matches = await API.getMatches(pet.id, 40);
+    if (matches.length){
+      toast('¡Posibles coincidencias!', `Encontramos ${matches.length} reporte(s) que podrían coincidir con ${pet.name}.`, 'success', 6000);
+    } else {
+      toast('Reporte publicado', 'Te avisaremos automáticamente si aparece una coincidencia.', 'success');
+    }
+    setTimeout(()=>{ location.href = `detalle.html?id=${pet.id}`; }, 1200);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adopción responsable — Huellas Unidas</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="img/logo_huellas-unidas.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="adopcion">
+
+<div id="siteNavbar"></div>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Adopción</div>
+    <div class="flex-between">
+      <div>
+        <h1>🏠 Adopción responsable</h1>
+        <p class="muted">Conoce a mascotas que buscan un hogar y da el primer paso hacia una adopción responsable.</p>
+      </div>
+      <button class="btn btn-primary" id="openAdoptModal">+ Publicar en adopción (gratis)</button>
+    </div>
+  </div>
+</div>
+
+<div class="no-sell-banner">
+  <div class="container">
+    <div class="no-sell-inner">
+      <div class="no-sell-icon">🚫</div>
+      <div class="no-sell-text">
+        <strong>Plataforma 100% gratuita — Está prohibido vender mascotas aquí</strong>
+        <span>Huellas Unidas solo permite publicaciones de <b>adopción gratuita</b> y <b>donación responsable</b>. Reporta cualquier publicación con cobro.</span>
+      </div>
+      <div class="no-sell-badges">
+        <span class="no-sell-badge">✅ Adopción gratuita</span>
+        <span class="no-sell-badge">✅ Donación responsable</span>
+        <span class="no-sell-badge red">🚫 Venta prohibida</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section" style="padding-top:32px;">
+  <div class="container">
+    <div class="filters-bar">
+      <div class="field">
+        <label>Especie</label>
+        <select id="aSpecies"><option value="">Todas</option><option>Perro</option><option>Gato</option><option>Ave</option><option>Conejo</option><option>Otro</option></select>
+      </div>
+      <div class="field">
+        <label>Sexo</label>
+        <select id="aSex"><option value="">Todos</option><option>Macho</option><option>Hembra</option></select>
+      </div>
+      <div class="field">
+        <label>Tamaño</label>
+        <select id="aSize"><option value="">Todos</option><option>Pequeño</option><option>Mediano</option><option>Grande</option></select>
+      </div>
+      <div class="field" style="flex:0;">
+        <label>&nbsp;</label>
+        <label style="display:flex;align-items:center;gap:6px;font-weight:600;font-size:.86rem;white-space:nowrap;">
+          <input type="checkbox" id="aShowAdopted" style="width:auto;"> Ver ya adoptadas
+        </label>
+      </div>
+    </div>
+    <p class="muted" style="margin-bottom:18px;"><strong id="adoptCount">0</strong> mascota(s) en adopción</p>
+    <div class="pets-grid" id="adoptGrid"></div>
+  </div>
+</section>
+
+<!-- Modal: publicar mascota en adopción -->
+<div class="modal-overlay" id="adoptModal">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal('adoptModal')">✕</button>
+    <h2>Publicar mascota en adopción</h2>
+    <form id="adoptForm">
+      <div class="field full"><label>Fotos</label><div class="photo-upload" id="adoptPhotoSlots"></div></div>
+      <div class="form-grid">
+        <div class="field"><label>Nombre</label><input type="text" id="adName" placeholder="Ej. Luna"></div>
+        <div class="field">
+          <label>Especie *</label>
+          <select id="adSpecies" required><option value="">Selecciona</option><option>Perro</option><option>Gato</option><option>Ave</option><option>Conejo</option><option>Otro</option></select>
+        </div>
+        <div class="field"><label>Raza</label><input type="text" id="adBreed"></div>
+        <div class="field">
+          <label>Sexo</label>
+          <div class="radio-group">
+            <label><input type="radio" name="adSex" value="Macho" checked> Macho</label>
+            <label><input type="radio" name="adSex" value="Hembra"> Hembra</label>
+          </div>
+        </div>
+        <div class="field"><label>Edad</label><input type="text" id="adAge" placeholder="Ej. 2 años"></div>
+        <div class="field">
+          <label>Tamaño</label>
+          <select id="adSize"><option value="">Selecciona</option><option>Pequeño</option><option>Mediano</option><option>Grande</option></select>
+        </div>
+        <div class="field"><label>Estado de salud</label><input type="text" id="adHealth" placeholder="Ej. Excelente"></div>
+        <div class="field">
+          <label>Distrito</label>
+          <select id="adDistrict"></select>
+        </div>
+        <div class="field full"><label>Dirección / refugio</label><input type="text" id="adAddress"></div>
+        <div class="field">
+          <label class="check-group"><input type="checkbox" id="adVaccines"> Vacunas completas</label>
+        </div>
+        <div class="field">
+          <label class="check-group"><input type="checkbox" id="adSterilized"> Esterilizado/a</label>
+        </div>
+        <div class="field full"><label>Historia</label><textarea id="adStory" placeholder="Cuéntanos su historia..."></textarea></div>
+        <div class="field full"><label>Requisitos de adopción</label><textarea id="adRequirements" placeholder="Ej. Visita de seguimiento, compromiso de esterilización..."></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('adoptModal')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Publicar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="siteFooter"></div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/listing.js"></script>
+<script src="js/adoption.js"></script>
+<script>
+  initAdoptionPage();
+  setupAdoptionForm();
+  document.getElementById('openAdoptModal').addEventListener('click', ()=>{
+    if (!requireAuth('publicar una mascota en adopción')) return;
+    openModal('adoptModal');
+  });
+</script>
+</body>
+</html>
