@@ -32,6 +32,7 @@ function petCard(pet, opts={}){
       <div class="pet-photo">
         ${photo ? `<img src="${photo}" alt="${pet.name}">` : emoji}
         <span class="status-badge status-${pet.status}">${STATUS_LABELS[pet.status]||pet.status}</span>
+        ${pet.flagged ? `<span class="status-flagged">🔍 En observación</span>` : ''}
         ${matchBadge}
         ${favBtnHtml(pet)}
       </div>

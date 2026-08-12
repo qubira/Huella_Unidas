@@ -449,6 +449,12 @@ legend{font-family:var(--font-display);padding:0 8px;color:var(--color-primary-d
 .status-reunida{background:linear-gradient(135deg,var(--color-success),#2d8a5f);}
 .status-adopcion{background:linear-gradient(135deg,#8B6FD1,#6B4FB4);}
 .status-adoptada{background:linear-gradient(135deg,#7a7a7a,#555);}
+.status-flagged{
+  position:absolute;top:42px;left:10px;padding:4px 12px;border-radius:99px;
+  font-size:.66rem;font-weight:800;color:#fff;letter-spacing:.02em;
+  background:linear-gradient(135deg,var(--color-warning),#c9820a);
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
 .match-badge{
   position:absolute;top:10px;right:10px;background:rgba(255,255,255,.95);
   color:var(--color-primary-dark);font-weight:800;font-size:.73rem;

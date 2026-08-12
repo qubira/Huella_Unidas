@@ -64,12 +64,15 @@ async function renderDetail(pet){
 
   host.innerHTML = `
     ${banner}
-    ${pet.flagged && isOwner ? `<div class="sighting-banner" style="background:#FDEDEE;border-color:var(--color-danger);">
-      <div><strong>🚩 Esta publicación fue reportada</strong><br><span class="muted" style="font-size:.85rem;">Un administrador la está revisando. Si crees que es un error, contáctanos.</span></div>
+    ${pet.flagged ? `<div class="sighting-banner" style="background:#FFF6E5;border-color:var(--color-warning);">
+      <div><strong>🔍 Esta publicación está en observación</strong><br><span class="muted" style="font-size:.85rem;">${isOwner ? 'Un administrador la está revisando. Si crees que es un error, contáctanos.' : 'La comunidad reportó esta publicación y un administrador la está revisando. Sigue disponible mientras tanto.'}</span></div>
     </div>` : ''}
 
     <div class="flex-between" style="margin-bottom:16px;">
-      <span class="status-badge status-${pet.status}" style="position:static;display:inline-block;">${STATUS_LABELS[pet.status]||pet.status}</span>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span class="status-badge status-${pet.status}" style="position:static;display:inline-block;">${STATUS_LABELS[pet.status]||pet.status}</span>
+        ${pet.flagged ? `<span class="status-flagged" style="position:static;display:inline-block;">🔍 En observación</span>` : ''}
+      </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;position:relative;">
         <button class="btn btn-ghost btn-sm" id="favDetailBtn">${pet.isFavorited ? '❤️ Guardado' : '🤍 Guardar'}</button>
         <button class="btn btn-ghost btn-sm" id="shareBtn">🔗 Compartir</button>
@@ -491,19 +494,67 @@ function openEditModal(pet){
   overlay.className = 'modal-overlay open';
   overlay.id = 'editModal';
   const isAdopt = pet.kind==='adopcion';
+  const sexOptions = ['Macho','Hembra'];
   overlay.innerHTML = `
     <div class="modal-box wide">
       <button class="modal-close" data-close>✕</button>
       <h2>✏️ Editar publicación</h2>
+
+      <div class="field full"><label>Fotos</label><div class="photo-upload" id="edPhotoSlots"></div></div>
+
       <div class="form-grid">
         <div class="field"><label>Nombre</label><input type="text" id="edName" value="${pet.name||''}"></div>
+        <div class="field">
+          <label>Especie</label>
+          <select id="edSpecies"><option>Perro</option><option>Gato</option><option>Ave</option><option>Conejo</option><option>Otro</option></select>
+        </div>
+        <div class="field"><label>Raza</label><input type="text" id="edBreed" value="${pet.breed||''}"></div>
+        <div class="field">
+          <label>Sexo</label>
+          <div class="radio-group">
+            ${sexOptions.map(s=>`<label><input type="radio" name="edSex" value="${s}" ${pet.sex===s?'checked':''}> ${s}</label>`).join('')}
+          </div>
+        </div>
         <div class="field"><label>Edad</label><input type="text" id="edAge" value="${pet.age||''}"></div>
+        <div class="field">
+          <label>Tamaño</label>
+          <select id="edSize"><option value="">Selecciona</option><option>Pequeño</option><option>Mediano</option><option>Grande</option></select>
+        </div>
         <div class="field"><label>Color</label><input type="text" id="edColor" value="${pet.color||''}"></div>
         <div class="field"><label>Estado de salud</label><input type="text" id="edHealth" value="${pet.health||''}"></div>
-        ${!isAdopt ? `<div class="field full"><label>Recompensa</label><input type="text" id="edReward" value="${pet.reward||''}"></div>` : ''}
+        ${!isAdopt ? `
+        <div class="field">
+          <label>¿Tiene microchip?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="edMicrochip" value="si" ${pet.microchip?'checked':''}> Sí</label>
+            <label><input type="radio" name="edMicrochip" value="no" ${!pet.microchip?'checked':''}> No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>¿Tiene collar?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="edCollar" value="si" ${pet.collar?'checked':''}> Sí</label>
+            <label><input type="radio" name="edCollar" value="no" ${!pet.collar?'checked':''}> No</label>
+          </div>
+        </div>
+        <div class="field full"><label>Recompensa</label><input type="text" id="edReward" value="${pet.reward||''}"></div>
+        ` : `
+        <div class="field"><label class="check-group"><input type="checkbox" id="edVaccines" ${pet.vaccines?'checked':''}> Vacunas completas</label></div>
+        <div class="field"><label class="check-group"><input type="checkbox" id="edSterilized" ${pet.sterilized?'checked':''}> Esterilizado/a</label></div>
+        `}
+        <div class="field"><label>Fecha</label><input type="date" id="edDate" value="${pet.date||''}"></div>
+        <div class="field"><label>Hora</label><input type="time" id="edTime" value="${pet.time||''}"></div>
+        <div class="field full"><label>Dirección</label><input type="text" id="edAddress" value="${pet.address||''}"></div>
+        <div class="field"><label>Distrito</label><select id="edDistrict"></select></div>
+        <div class="field"><label>Provincia / Departamento</label><input type="text" value="Lima" readonly></div>
         <div class="field full"><label>Características especiales</label><textarea id="edFeatures">${pet.features||''}</textarea></div>
         <div class="field full"><label>${isAdopt? 'Historia':'Descripción'}</label><textarea id="edDescription">${isAdopt ? (pet.story||'') : (pet.description||'')}</textarea></div>
         ${isAdopt ? `<div class="field full"><label>Requisitos de adopción</label><textarea id="edRequirements">${pet.requirements||''}</textarea></div>` : ''}
+        ${!isAdopt ? `<div class="field full">
+          <label>Ubicación (marca el punto exacto en el mapa)</label>
+          <div id="edPickMap" class="map-pick" style="height:220px;"></div>
+          <span class="coord-display" id="edCoordDisplay">${pet.lat ? `Lat: ${pet.lat.toFixed(5)}, Lng: ${pet.lng.toFixed(5)}` : 'Sin ubicación seleccionada'}</span>
+        </div>` : ''}
       </div>
       <div class="form-actions">
         <button class="btn btn-ghost" data-close>Cancelar</button>
@@ -511,22 +562,58 @@ function openEditModal(pet){
       </div>
     </div>`;
   document.body.appendChild(overlay);
+
+  overlay.querySelector('#edSpecies').value = pet.species || 'Perro';
+  overlay.querySelector('#edSize').value = pet.size || '';
+  fillDistritoSelect(overlay.querySelector('#edDistrict'));
+  overlay.querySelector('#edDistrict').value = pet.district || '';
+
+  const photoCtl = setupPhotoUpload('edPhotoSlots', 4);
+  if (pet.photos && pet.photos.length) photoCtl.setPhotos(pet.photos.slice());
+
+  let pickedLat = pet.lat ?? null, pickedLng = pet.lng ?? null;
+  if (!isAdopt){
+    const mapCtl = setupMapPicker('edPickMap', {
+      center: pet.lat ? [pet.lat, pet.lng] : undefined,
+      onPick:(lat,lng)=>{
+        pickedLat = lat; pickedLng = lng;
+        overlay.querySelector('#edCoordDisplay').textContent = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+      }
+    });
+    if (pet.lat && pet.lng) mapCtl.setMarker(pet.lat, pet.lng);
+  }
+
   overlay.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', ()=>overlay.remove()));
   overlay.addEventListener('click', (e)=>{ if (e.target===overlay) overlay.remove(); });
   overlay.querySelector('#saveEditBtn').addEventListener('click', async ()=>{
+    if (photoCtl.isUploading()){ toast('Espera un momento', 'Todavía se están subiendo las fotos.', 'info'); return; }
     const patch = {
       name: overlay.querySelector('#edName').value || pet.name,
+      species: overlay.querySelector('#edSpecies').value,
+      breed: overlay.querySelector('#edBreed').value,
+      sex: overlay.querySelector('input[name=edSex]:checked')?.value || pet.sex,
       age: overlay.querySelector('#edAge').value,
+      size: overlay.querySelector('#edSize').value,
       color: overlay.querySelector('#edColor').value,
       health: overlay.querySelector('#edHealth').value,
       features: overlay.querySelector('#edFeatures').value,
+      photos: photoCtl.getPhotos(),
+      date: overlay.querySelector('#edDate').value,
+      time: overlay.querySelector('#edTime').value,
+      address: overlay.querySelector('#edAddress').value,
+      district: overlay.querySelector('#edDistrict').value,
     };
     if (isAdopt){
       patch.story = overlay.querySelector('#edDescription').value;
       patch.requirements = overlay.querySelector('#edRequirements').value;
+      patch.vaccines = overlay.querySelector('#edVaccines').checked;
+      patch.sterilized = overlay.querySelector('#edSterilized').checked;
     } else {
       patch.description = overlay.querySelector('#edDescription').value;
       patch.reward = overlay.querySelector('#edReward').value;
+      patch.microchip = overlay.querySelector('input[name=edMicrochip]:checked')?.value === 'si';
+      patch.collar = overlay.querySelector('input[name=edCollar]:checked')?.value === 'si';
+      if (pickedLat != null) { patch.lat = pickedLat; patch.lng = pickedLng; }
     }
     const saveBtn = overlay.querySelector('#saveEditBtn');
     saveBtn.disabled = true;
