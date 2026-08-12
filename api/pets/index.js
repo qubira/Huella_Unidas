@@ -57,6 +57,9 @@ module.exports = withHandler(async (req, res) => {
         ${b.description || null}, ${session.id}, ${!!b.vaccines}, ${!!b.sterilized},
         ${b.story || null}, ${b.requirements || null}
       ) RETURNING *`;
+    await db`
+      INSERT INTO pet_status_history (pet_id, old_status, new_status, changed_by)
+      VALUES (${rows[0].id}, NULL, ${rows[0].status}, ${session.id})`;
     return res.status(201).json({ pet: rowToPet(rows[0]) });
   }
 

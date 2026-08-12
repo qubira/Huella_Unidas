@@ -70,6 +70,11 @@ module.exports = withHandler(async (req, res) => {
     if (!sets.length) return res.status(400).json({ error: 'Nada que actualizar.' });
     values.push(id);
     const rows = await db(`UPDATE pets SET ${sets.join(', ')} WHERE id = $${i} RETURNING *`, values);
+    if (patch.status && patch.status !== existing.status){
+      await db`
+        INSERT INTO pet_status_history (pet_id, old_status, new_status, changed_by)
+        VALUES (${id}, ${existing.status}, ${patch.status}, ${session.id})`;
+    }
     return res.status(200).json({ pet: rowToPet(rows[0]) });
   }
 

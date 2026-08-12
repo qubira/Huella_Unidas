@@ -90,3 +90,27 @@ CREATE TABLE IF NOT EXISTS favorites (
   created_at  timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (user_id, pet_id)
 );
+
+-- Seguridad/auditoría: IP y geolocalización cifradas por cuenta (creación + cada login).
+-- Nunca se expone por la API pública; solo lo lee el panel admin separado.
+CREATE TABLE IF NOT EXISTS login_events (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id       uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  event_type    text NOT NULL, -- 'register' | 'login'
+  ip_encrypted  text,
+  geo_encrypted text,
+  user_agent    text,
+  created_at    timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_login_events_user ON login_events(user_id, created_at DESC);
+
+-- Bitácora de cambios de estado de reportes (perdida/encontrada/adopción).
+CREATE TABLE IF NOT EXISTS pet_status_history (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  pet_id      uuid NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
+  old_status  text,
+  new_status  text NOT NULL,
+  changed_by  uuid REFERENCES users(id) ON DELETE SET NULL,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_pet_status_history_pet ON pet_status_history(pet_id, created_at DESC);

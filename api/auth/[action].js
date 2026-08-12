@@ -4,6 +4,23 @@ const { sql } = require('../_lib/db');
 const { hashPassword, comparePassword, signSession, getSession, setSessionCookie, clearSessionCookie } = require('../_lib/auth');
 const { rowToUser } = require('../_lib/serialize');
 const { withHandler } = require('../_lib/handler');
+const { encrypt } = require('../_lib/crypto');
+const { lookupGeo } = require('../_lib/geo');
+const { getClientIp, getUserAgent } = require('../_lib/request');
+
+// Registra IP/geolocalización cifradas para un evento de cuenta (registro o login).
+// Es "mejor esfuerzo": si algo falla acá nunca debe tumbar el login/registro del usuario.
+async function recordLoginEvent(db, req, userId, eventType){
+  try{
+    const ip = getClientIp(req);
+    const geo = await lookupGeo(ip);
+    await db`
+      INSERT INTO login_events (user_id, event_type, ip_encrypted, geo_encrypted, user_agent)
+      VALUES (${userId}, ${eventType}, ${encrypt(ip)}, ${geo ? encrypt(JSON.stringify(geo)) : null}, ${getUserAgent(req)})`;
+  }catch(e){
+    console.error('No se pudo registrar login_event:', e);
+  }
+}
 
 async function register(req, res, db){
   const { name, email, phone, password } = req.body || {};
@@ -26,6 +43,7 @@ async function register(req, res, db){
   const user = rowToUser(rows[0]);
   const token = signSession({ id: user.id, role: user.role });
   setSessionCookie(req, res, token);
+  await recordLoginEvent(db, req, user.id, 'register');
   res.status(201).json({ user });
 }
 
@@ -46,6 +64,7 @@ async function login(req, res, db){
   const user = rowToUser(userRow);
   const token = signSession({ id: user.id, role: user.role });
   setSessionCookie(req, res, token);
+  await recordLoginEvent(db, req, user.id, 'login');
   res.status(200).json({ user });
 }
 

@@ -27,6 +27,9 @@ async function confirm(req, res, db, id){
   const session = requireUser(req, res);
   if (!session) return;
 
+  const before = await db`SELECT status FROM pets WHERE id = ${id}`;
+  const statusBefore = before[0]?.status;
+
   const rows = await db`
     UPDATE pets SET
       confirmed_by = (SELECT array_agg(DISTINCT x) FROM unnest(confirmed_by || ARRAY[${session.id}::uuid]) AS x),
@@ -51,6 +54,12 @@ async function confirm(req, res, db, id){
 
   const petRow = rows[0];
   if (!petRow) return res.status(404).json({ error: 'Mascota no encontrada.' });
+
+  if (petRow.status !== statusBefore){
+    await db`
+      INSERT INTO pet_status_history (pet_id, old_status, new_status, changed_by)
+      VALUES (${id}, ${statusBefore}, ${petRow.status}, ${session.id})`;
+  }
 
   const finalized = petRow.status === 'reunida' || petRow.status === 'adoptada';
   if (finalized && petRow.resolved_at && (Date.now() - new Date(petRow.resolved_at).getTime()) < 5000){
