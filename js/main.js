@@ -269,7 +269,11 @@ function setupPWA(){
 function injectChrome(){
   const navHost = document.getElementById('siteNavbar');
   if (navHost){
-    navHost.innerHTML = `
+    // Se reemplaza el div contenedor por el <nav> mismo (en vez de rellenarlo con
+    // innerHTML) porque `position:sticky` solo puede "pegarse" mientras el elemento
+    // padre siga visible; si el padre mide lo mismo que el navbar, pierde su
+    // margen de sticky apenas se hace scroll un píxel.
+    navHost.outerHTML = `
       <nav class="navbar">
         <div class="container">
           <a href="index.html" class="brand"><img src="img/logo_huellas-unidas.png" alt="Huellas Unidas" class="brand-logo"><span class="brand-word">Huellas <span class="hl">Unidas</span></span></a>
@@ -285,9 +289,10 @@ function injectChrome(){
           <div class="nav-actions" id="navAuthSlot"></div>
         </div>
       </nav>`;
+    const navEl = document.querySelector('.navbar');
     renderNavAuth();
     const page = document.body.dataset.page;
-    const link = navHost.querySelector(`[data-nav="${page}"]`);
+    const link = navEl.querySelector(`[data-nav="${page}"]`);
     if (link) link.classList.add('active');
     document.getElementById('navToggle').addEventListener('click', ()=>{
       const links = document.getElementById('navLinks');
